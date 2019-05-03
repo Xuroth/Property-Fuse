@@ -1,46 +1,57 @@
+require('rootpath')();
+require('dotenv').config({path: './config/.env'});
 const express       =   require('express');
 const bodyParser    =   require('body-parser');
 const path          =   require('path');
 const fs            =   require('fs');
-const config        =   require('dotenv');
+
 const logger        =   require('./config/logging.js');
+const cors          =   require('cors');
 const moment        =   require('moment');
+const jwt           =   require('_helpers/jwt');
+const errorHandler  =   require('_helpers/error-handler');
 // const morgan        =   require('morgan');
 // const winston       =   require('winston');
 
 //Load configuration and set base variables
-config.config({path: path.join(__dirname, '/config/.env')});
+
 const isProduction  =   process.env.NODE_ENV === 'production';
 const app           =   express();
 app.set('trust proxy', true);
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use(cors());
+app.use(jwt());
 
 //CRON Tasks (if any)
 //#------
 
 // API ROUTES
 //#api.route.all
+app.use('/users', require('./users/user.controller'))
 
+//Error Handler
+app.use(errorHandler);
 //404 handler
-app.use((req, res, next) => {
-    let err = {
-        status: 404,
-        message: `[${moment.utc().format('MMM DD YYYY @ hh:mm:ss.SSSSS a')}] ${req.ip} -> ${req.method}: ${req.originalUrl} - [404 - Not Found]`
-    };
-    next(err);
-});
+// app.use((req, res, next) => {
+//     let err = {
+//         status: 404,
+//         message: `[${moment.utc().format('MMM DD YYYY @ hh:mm:ss.SSSSS a')}] ${req.ip} -> ${req.method}: ${req.originalUrl} - [404 - Not Found]`
+//     };
+//     next(err);
+// });
 
-//Default Error Handler
-app.use((error, req, res, next) => {
-    let err = {
-        status: error.status || 500,
-        message: error.message || 'Unknown Error'
-    };
+// //Default Error Handler
+// app.use((error, req, res, next) => {
+//     let err = {
+//         status: error.status || 500,
+//         message: error.message || 'Unknown Error'
+//     };
 
-    logger.error(err);
+//     logger.error(err);
 
-    res.json(err);
-});
+//     res.json(err);
+// });
 
 let startupAttempts = 0;
 let serverPort = process.env.PORT || 3006;
