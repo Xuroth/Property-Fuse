@@ -9,7 +9,8 @@ function jwt() {
         path: [
             //Public routes
             '/users/authenticate',
-            '/users/register'
+            '/users/register',
+            '/listings/'
         ]
     });
 }
