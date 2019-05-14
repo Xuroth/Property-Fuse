@@ -29,7 +29,7 @@ app.use(jwt());
 // API ROUTES
 //#api.route.all
 app.use('/users', require('./users/user.controller'))
-
+app.use('/listings', require('./listings/listing.controller'));
 //Error Handler
 app.use(errorHandler);
 //404 handler

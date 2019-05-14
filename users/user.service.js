@@ -14,6 +14,7 @@ module.exports = {
 
 async function authenticate({email, password}) {
     const user = await User.findOne({email});
+    console.log('user', user, 'email/pass', email, password)
     if (user && bcrypt.compareSync(password, user.password)) {
         console.log('here')
         const {password, ...userWithoutPassword} = user.toObject(); //TODO: Edit ..userWithoutPassword to be fields minus password
@@ -39,7 +40,9 @@ async function create(userParameters) {
     }
 
     const user = new User(userParameters);
-
+    if(!userParameters.accountType){
+        user.accountType = 'buyer';
+    }
     if (userParameters.password) {
         user.password = bcrypt.hashSync(userParameters.password, bcrypt.genSaltSync(10));
     }
@@ -67,3 +70,4 @@ async function update(id, userParameters) {
 async function _delete(id) {
     await User.findByIdAndRemove(id);
 }
+
