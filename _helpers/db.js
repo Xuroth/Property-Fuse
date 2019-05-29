@@ -9,5 +9,6 @@ mongoose.Promise = global.Promise;
 //Connect all models for use
 module.exports = {
     User: require('../users/user.model'),
-    Listing: require('../listings/listing.model')
+		Listing: require('../listings/listing.model'),
+		Testimonial: require('../testimonials/testimonial.model')
 };
