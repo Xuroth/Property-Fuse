@@ -21,7 +21,13 @@ app.set('trust proxy', true);
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors());
+app.use((req, res, next) => {
+	console.log(req.originalUrl)
+	next();
+})
 app.use(jwt());
+
+
 
 //CRON Tasks (if any)
 //#------
@@ -30,6 +36,7 @@ app.use(jwt());
 //#api.route.all
 app.use('/users', require('./users/user.controller'))
 app.use('/listings', require('./listings/listing.controller'));
+app.use('/testimonials', require('./testimonials/testimonial.controller'));
 //Error Handler
 app.use(errorHandler);
 //404 handler

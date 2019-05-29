@@ -5,11 +5,14 @@ const listingService    = require('./listing.service');
 //Listing Routes
 router.post('/create', create);
 router.get('/', getAll);
-router.get('/featured', featured);
+router.get('/featured', getFeatured);
+router.get('/sold', getSold);
+router.get('/recently-sold', getRecentlySold);
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
-
+router.post('/publish/:id', publish);
+router.post('/promote/:id', promote);
 
 module.exports = router;
 
@@ -45,8 +48,32 @@ function _delete(req, res, next) {
         .catch( err => next(err) );
 }
 
-function featured(req, res, next) {
+function getFeatured(req, res, next) {
     listingService.getFeatured()
         .then( (listings) => res.json(listings) )
         .catch( err => next(err) );
+}
+
+function publish(req, res, next) {
+	listingService.publish(req.params.id)
+		.then( (listing) => res.json({listing}) )
+		.catch( err => next(err) );
+}
+
+function promote(req, res, next) {
+	listingService.promote(req.params.id)
+		.then( listing => res.json({listing}) )
+		.catch( err => next(err) )
+}
+
+function getSold(req, res, next) {
+	listingService.getSold()
+		.then( (listings) => res.json({listings}) )
+		.catch( err => next(err) );
+}
+
+function getRecentlySold(req, res, next) {
+	listingService.getRecentlySold()
+		.then( (listings) => res.json(listings) )
+		.catch( err => next(err) );
 }

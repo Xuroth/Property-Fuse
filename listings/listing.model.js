@@ -34,19 +34,33 @@ const schema = new Schema({
         default: 0,
         get: getPrice,
         set: setPrice
-    },
-    lister: {
+		},
+		soldPrice: {
+			type: Number,
+			default: 0,
+			get: getPrice,
+			set: setPrice
+		},
+    createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
     createdAt: {
         type: Date,
         default: Date.now
-    },
+		},
+		removedBy: {
+			type: Schema.Types.ObjectId,
+			ref: 'User'
+		},
     removedAt: {
         type: Date,
         default: null
-    },
+		},
+		updatedBy: {
+			type: Schema.Types.ObjectId,
+			ref: 'User'
+		},
     updatedAt: {
         type: Date,
         default: null
@@ -133,7 +147,23 @@ const schema = new Schema({
     featured: {
         type: Boolean,
         default: false
-    }
+		},
+		promoted: {
+			type: Boolean,
+			default: false
+		},
+		images: [
+			{
+				url: {
+					type: String,
+					default: 'http://placehold.it/800&text=Property%20Image'
+				},
+				main: {
+					type: Boolean,
+					default: false
+				}
+			}
+		]
 });
 
 
