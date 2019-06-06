@@ -37,6 +37,7 @@ app.use(jwt());
 app.use('/users', require('./users/user.controller'))
 app.use('/listings', require('./listings/listing.controller'));
 app.use('/testimonials', require('./testimonials/testimonial.controller'));
+app.use('/admin', require('./admin/admin.controller'));
 //Error Handler
 app.use(errorHandler);
 //404 handler
