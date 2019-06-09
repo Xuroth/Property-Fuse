@@ -34,10 +34,10 @@ async function update(id, listingParameters) {
     const listing = await Listing.findById(id);
 
     if(!listing) throw 'Listing not found';
-
     Object.assign(listing, listingParameters);
 
-    await listing.save();
+		await listing.save();
+		return listing;
 }
 
 async function getFeatured() {
