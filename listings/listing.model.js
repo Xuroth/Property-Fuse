@@ -119,7 +119,11 @@ const schema = new Schema({
             'mobile',
             'other'
         ]
-    },
+		},
+		folioNumber: {
+			type: String,
+			default: ''
+		},
     arv: {
         estimate: {
             type: Number,
@@ -161,6 +165,14 @@ const schema = new Schema({
 				main: {
 					type: Boolean,
 					default: false
+				},
+				caption: {
+					type: String,
+					default: null
+				},
+				filename: {
+					type: String,
+					required: true
 				}
 			}
 		]

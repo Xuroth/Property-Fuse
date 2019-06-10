@@ -38,7 +38,7 @@ function getById(req, res, next) {
 
 function update(req, res, next) {
     listingService.update(req.params.id, req.body)
-        .then( () => res.json({}) )
+        .then( (listing) => res.json(listing) )
         .catch( err => next(err) );
 }
 
