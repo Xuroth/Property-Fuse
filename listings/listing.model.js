@@ -165,6 +165,14 @@ const schema = new Schema({
 				main: {
 					type: Boolean,
 					default: false
+				},
+				caption: {
+					type: String,
+					default: null
+				},
+				filename: {
+					type: String,
+					required: true
 				}
 			}
 		]
