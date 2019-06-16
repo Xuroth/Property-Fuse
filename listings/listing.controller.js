@@ -8,6 +8,7 @@ router.get('/', getAll);
 router.get('/featured', getFeatured);
 router.get('/sold', getSold);
 router.get('/recently-sold', getRecentlySold);
+router.get('/by/:id', getByCreatorId)
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
@@ -17,41 +18,45 @@ router.post('/promote/:id', promote);
 module.exports = router;
 
 function create(req, res, next) {
-    //console.log('Controller')
-    //console.log('REQ.USER;',req.user)
-    listingService.create(req.user, req.body)
-        .then(  () => res.json({}) )
-        .catch( err => next(err) );
+	listingService.create(req.user, req.body)
+		.then(  () => res.json({}) )
+		.catch( err => next(err) );
 }
 
 function getAll(req, res, next) {
-    listingService.getAll()
-        .then( listings => res.json(listings) )
-        .catch( err => next(err) );
+	listingService.getAll()
+		.then( listings => res.json(listings) )
+		.catch( err => next(err) );
 }
 
 function getById(req, res, next) {
-    listingService.getById(req.params.id)
-        .then( listing => listing ? res.json(listing) : res.sendStatus(404) )
-        .catch( err => next(err) );
+	listingService.getById(req.params.id)
+		.then( listing => listing ? res.json(listing) : res.sendStatus(404) )
+		.catch( err => next(err) );
+}
+
+function getByCreatorId(req, res, next) {
+	listingService.getByCreatorId(req.params.id)
+		.then( listings => listings ? res.json(listings) : res.sendStatus(404) )
+		.catch( err => next(err) );
 }
 
 function update(req, res, next) {
-    listingService.update(req.params.id, req.body)
-        .then( (listing) => res.json(listing) )
-        .catch( err => next(err) );
+	listingService.update(req.params.id, req.body)
+		.catch( err => next(err) )
+		.then( (listing) => res.json(listing) )
 }
 
 function _delete(req, res, next) {
-    listingService.delete(req.params.id)
-        .then( () => res.json({}) )
-        .catch( err => next(err) );
+	listingService.delete(req.params.id)
+		.then( () => res.json({}) )
+		.catch( err => next(err) );
 }
 
 function getFeatured(req, res, next) {
-    listingService.getFeatured()
-        .then( (listings) => res.json(listings) )
-        .catch( err => next(err) );
+	listingService.getFeatured()
+		.then( (listings) => res.json(listings) )
+		.catch( err => next(err) );
 }
 
 function publish(req, res, next) {

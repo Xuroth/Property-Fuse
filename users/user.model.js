@@ -27,7 +27,36 @@ const schema = new Schema({
         type: String,
         enum: ['buyer','seller','admin'],
         required: true
-    }
+		},
+		resetToken: {
+			type: String,
+			default: null
+		},
+		verified: {
+			type: Boolean,
+			default: false
+		},
+		status: {
+			type: String,
+			enum: ['pending', 'locked', 'status', 'unlocked', 'banned'],
+			default: 'unlocked'
+		},
+		companyName: {
+			type: String,
+			default: null
+		},
+		avatar: {
+			type: String,
+			default: 'https://placehold.it/300&text=No%20Image'
+		},
+		updatedAt: {
+			type: Date,
+			default: null
+		},
+		updatedBy: {
+			type: Schema.Types.ObjectId,
+			ref: 'User'
+		}
 });
 
 schema.set('toJSON', {virtuals: true});
