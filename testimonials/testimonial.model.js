@@ -10,9 +10,10 @@ const schema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'User'
 	},
-	published: {
-		type: Boolean,
-		default: false
+	status: {
+		type: String,
+		enum: ['removed', 'published', 'pending'],
+		default: 'pending'
 	},
 	createdAt: {
 		type: Date,

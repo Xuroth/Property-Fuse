@@ -9,7 +9,10 @@ module.exports = {
 	unlockUser,
 	resetUserPassword,
 	getAllUsers,
-	editUser
+	editUser,
+	getPendingTestimonials,
+	publishTestimonial,
+	rejectTestimonial
 }
 
 async function getDashboardData() {
@@ -72,4 +75,32 @@ async function editUser(id, adminID, userData) {
 	Object.assign(user, userData);
 	await user.save();
 	return user;
+}
+
+async function getPendingTestimonials() {
+	const testimonials = await Testimonial.find({status: 'pending'})
+															.populate('updatedBy', '-password')
+															.populate('author', '-password')
+															.sort({updatedAt: 1, createdAt: 1})
+	return testimonials;
+}
+
+async function publishTestimonial(id, adminID) {
+	const testimonial = await Testimonial.findById(id);
+	testimonial.updatedAt = Date.now();
+	testimonial.updatedBy = adminID;
+	testimonial.status = 'published';
+	await testimonial.save()
+	return testimonial;
+}
+
+async function rejectTestimonial(id, adminID) {
+	console.log(adminID)
+	const testimonial = await Testimonial.findById(id);
+	testimonial.updatedAt = Date.now();
+	testimonial.updatedBy = adminID;
+	testimonial.status = 'removed';
+	testimonial.removedAt = Date.now();
+	await testimonial.save()
+	return testimonial;
 }

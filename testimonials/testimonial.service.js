@@ -10,7 +10,7 @@ module.exports = {
 };
 
 async function getAll() {
-	return await Testimonial.find({}).populate('author', '-password').populate('updatedBy', '-password');
+	return await Testimonial.find({status: "published"}).populate('author', '-password').populate('updatedBy', '-password');
 }
 
 async function getById(id) {
