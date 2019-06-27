@@ -10,7 +10,7 @@ module.exports = {
     getById,
     create,
     update,
-    delete: _delete
+		delete: _delete
 };
 
 async function authenticate({email, password}) {
@@ -86,8 +86,7 @@ async function update(id, userParameters) {
 }
 
 async function _delete(id) {
-		const user = await Users.findById(id);
+		const user = await User.findById(id);
 		await stripe.customers.del(user.customerKey);
     await User.findByIdAndRemove(id);
 }
-

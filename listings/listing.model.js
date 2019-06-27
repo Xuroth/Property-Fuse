@@ -127,25 +127,21 @@ const schema = new Schema({
     arv: {
         estimate: {
             type: Number,
-            required: true,
             get: getPrice,
             set: setPrice
         },
         explanation: {
-            type: String,
-            required: true
+            type: String
         }
     },
     repairs: {
         estimate: {
             type: Number,
-            required: true,
             get: getPrice,
             set: setPrice
         },
         explanation: {
-            type: String,
-            required: true
+            type: String
         }
     },
     featured: {
@@ -175,7 +171,13 @@ const schema = new Schema({
 					required: true
 				}
 			}
-		]
+		],
+		initialPrice: {
+			type: Number,
+			get: getPrice,
+			set: setPrice,
+			default: 000
+		}
 });
 
 
