@@ -56,6 +56,9 @@ const schema = new Schema({
 		updatedBy: {
 			type: Schema.Types.ObjectId,
 			ref: 'User'
+		},
+		customerKey: {
+			type: String
 		}
 });
 

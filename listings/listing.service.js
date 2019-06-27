@@ -1,5 +1,7 @@
 const db        = require('_helpers/db');
 const Listing   = db.Listing;
+const User			= db.User;
+const stripe		= require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 module.exports = {
     getAll,
@@ -53,11 +55,24 @@ async function _delete(id) {
 	await Listing.findByIdAndRemove(id);
 }
 
-async function publish(id) {
-	const listing = Listing.findById(id);
-	listing.published = 'published';
-	await listing.save();
-	return listing;
+async function publish(userID, listing, source) {
+	const newListing = new Listing(listing);
+	const user = await User.findById(userID)
+	newListing.status = 'pending';
+	await stripe.charges.create({
+		amount: 50000,
+		currency: 'usd',
+		description: `Listing fee for ${listing.address1} ${listing.address2} ${listing.city} ${listing.state} ${listing.zipCode}`,
+		customer: user.customerKey,
+		source: source.id
+	})
+	.then( (charge) => {
+		// console.log('charge', charge)
+		newListing.status = 'published';
+	})
+	await newListing.save();
+	return newListing;
+
 }
 
 async function promote(id) {

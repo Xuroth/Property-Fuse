@@ -12,7 +12,7 @@ router.get('/by/:id', getByCreatorId)
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
-router.post('/publish/:id', publish);
+router.post('/publish', publish);
 router.post('/promote/:id', promote);
 
 module.exports = router;
@@ -60,8 +60,8 @@ function getFeatured(req, res, next) {
 }
 
 function publish(req, res, next) {
-	listingService.publish(req.params.id)
-		.then( (listing) => res.json({listing}) )
+	listingService.publish(req.user.sub, req.body.listing, req.body.source.source)
+		.then( (listing) => listing ? res.json(listing) : res.status(400).json({message: 'There was a problem with your request. Please try again.'}))
 		.catch( err => next(err) );
 }
 

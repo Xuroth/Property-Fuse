@@ -30,6 +30,7 @@
     "mongoose": "^5.5.5",
     "morgan": "^1.9.1",
     "rootpath": "^0.1.2",
+    "stripe": "^7.3.0",
     "winston": "^3.2.1"
   }
 }
