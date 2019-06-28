@@ -11,5 +11,6 @@ module.exports = {
     User: require('../users/user.model'),
 		Listing: require('../listings/listing.model'),
 		Testimonial: require('../testimonials/testimonial.model'),
-		PaymentMethod: require('../paymentMethods/paymentMethods.model')
+		PaymentMethod: require('../paymentMethods/paymentMethods.model'),
+		Inquiry: require('../inquiries/inquiries.model')
 };

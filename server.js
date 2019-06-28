@@ -39,6 +39,7 @@ app.use('/listings', require('./listings/listing.controller'));
 app.use('/testimonials', require('./testimonials/testimonial.controller'));
 app.use('/admin', require('./admin/admin.controller'));
 app.use('/payment_methods', require('./paymentMethods/paymentMethods.controller'));
+app.use('/inquiries', require('./inquiries/inquiries.controller'));
 //Error Handler
 app.use(errorHandler);
 //404 handler
