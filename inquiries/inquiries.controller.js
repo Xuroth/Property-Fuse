@@ -4,6 +4,7 @@ const inquiryService	= require('./inquiries.service');
 
 //Inquiry Routes
 router.get('/', getInquiriesByUser);
+router.get('/listings', getAllInquiriesFromListings);
 router.get('/listing/:id', getInquiriesByListing);
 router.get('/:id', getInquiryById);
 router.post('/', createNewInquiry);
@@ -16,6 +17,12 @@ module.exports = router;
 function getInquiriesByUser(req, res, next) {
 	inquiryService.getAllInquiriesForUser(req.user.sub)
 		.then( inquiries => inquiries ? res.json(inquiries) : res.status(404).json({message: 'No user found for inquiries'}))
+		.catch( err => next(err) );
+}
+
+function getAllInquiriesFromListings(req, res, next) {
+	inquiryService.getAllInquiriesForFromListings(req.user.sub)
+		.then( inquiries => inquiries ? res.json(inquiries) : res.status(404).json({message: 'Unable to fetch inquiries'}))
 		.catch( err => next(err) );
 }
 

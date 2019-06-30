@@ -6,6 +6,7 @@ const Users			= db.User;
 module.exports = {
 	getAllInquiriesForListing,
 	getAllInquiriesForUser,
+	getAllInquiriesForFromListings,
 	getById,
 	newInquiry,
 	markReadInquiry,
@@ -36,6 +37,15 @@ async function getAllInquiriesForUser(userID) {
 	} else {
 		return inquiries;
 	}
+}
+
+async function getAllInquiriesForFromListings(userID) {
+	const listings = await Listings.find({createdBy: userID}).select('_id');
+	const inquiries = await Inquiries.find({listing: {$in: listings}})
+		.populate('inquirer', 'firstName lastName companyName email avatar')
+		.populate('listing', 'address1 address2 city state zipCode askPrice createdAt images');
+
+	return inquiries;
 }
 
 async function getById(inquiryID) {

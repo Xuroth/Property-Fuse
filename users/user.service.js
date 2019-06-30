@@ -9,18 +9,17 @@ module.exports = {
     getAll,
     getById,
     create,
-    update,
+		update,
+		changePassword,
 		delete: _delete
 };
 
 async function authenticate({email, password}) {
     const user = await User.findOne({email});
-    console.log('user', user, 'email/pass', email, password)
     if (user && bcrypt.compareSync(password, user.password)) {
         const {password, ...userWithoutPassword} = user.toObject(); //TODO: Edit ..userWithoutPassword to be fields minus password
         const token = jwt.sign({ sub: user.id}, process.env.SECRET_KEY);
-				userWithoutPassword.customerData = await stripe.customers.retrieve(user.customerKey)
-				console.log(userWithoutPassword);
+				userWithoutPassword.customerData = await stripe.customers.retrieve(user.customerKey);
 				return {
             ...userWithoutPassword,
             token
@@ -83,6 +82,24 @@ async function update(id, userParameters) {
 			}
 		)
     await user.save();
+}
+
+async function changePassword(userID, userData){
+	const user = await User.findById(userID);
+	if(user && bcrypt.compareSync(userData.oldPassword, user.password)) {
+		const {password, ...userWithoutPassword} = user.toObject();
+		user.password = bcrypt.hashSync(userData.newPassword, bcrypt.genSaltSync(10));
+		await user.save();
+
+		//Regenerate new token
+		const token = jwt.sign({sub: user.id}, process.env.SECRET_KEY);
+		userWithoutPassword.customerData = await stripe.customers.retrieve(user.customerKey);
+		return {
+			...userWithoutPassword,
+			token
+		}
+	}
+
 }
 
 async function _delete(id) {

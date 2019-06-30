@@ -7,6 +7,7 @@ router.post('/authenticate', authenticate);
 router.post('/register', register);
 router.get('/', getAll);
 router.get('/current', getCurrent);
+router.put('/change-password', changePassword);
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
@@ -38,6 +39,11 @@ function getCurrent(req, res, next) {
         .catch(err => next(err));
 }
 
+function changePassword(req, res, next) {
+	userService.changePassword(req.user.sub, req.body)
+		.then( user => user ? res.json(user) : res.status(400).json({message: 'Old password invalid.'}))
+		.catch( err => next(err) );
+}
 function getById(req, res, next) {
     userService.getById(req.params.id)
         .then(user => user ? res.json(user) : res.sendStatus(404))
