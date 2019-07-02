@@ -4,9 +4,12 @@ const userService   = require('./user.service');
 
 //User Routes
 router.post('/authenticate', authenticate);
+router.post('/auth/google', authGoogle);
+router.post('/auth/facebook', authFacebook);
 router.post('/register', register);
 router.get('/', getAll);
 router.get('/current', getCurrent);
+router.put('/change-password', changePassword);
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
@@ -38,6 +41,11 @@ function getCurrent(req, res, next) {
         .catch(err => next(err));
 }
 
+function changePassword(req, res, next) {
+	userService.changePassword(req.user.sub, req.body)
+		.then( user => user ? res.json(user) : res.status(400).json({message: 'Old password invalid.'}))
+		.catch( err => next(err) );
+}
 function getById(req, res, next) {
     userService.getById(req.params.id)
         .then(user => user ? res.json(user) : res.sendStatus(404))
@@ -54,4 +62,16 @@ function _delete(req, res, next) {
     userService.delete(req.params.id)
         .then(() => res.json({}))
         .catch(err => next(err));
+}
+
+function authGoogle(req, res, next) {
+	userService.authGoogle(req.body.code)
+		.then( user => user ? res.json(user) : res.status(400).json({message: 'Error occured during authorization process.'}))
+		.catch( err => next(err) );
+}
+
+function authFacebook(req, res, next) {
+	userService.authFacebook(req.body)
+		.then( user => user ? res.json(user) : res.status(400).json({message: 'Error occured during authorization process.'}))
+		.catch( err => next(err) );
 }
