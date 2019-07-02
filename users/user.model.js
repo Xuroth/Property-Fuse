@@ -9,7 +9,7 @@ const schema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        // required: true
     },
     firstName: {
         type: String,
@@ -59,6 +59,27 @@ const schema = new Schema({
 		},
 		customerKey: {
 			type: String
+		},
+		auth: {
+			facebook: {
+				userID: {
+					type: String
+				},
+				accessToken: {
+					type: String
+				}
+			},
+			google: {
+				userID: {
+					type: String
+				},
+				accessToken: {
+					type: String
+				},
+				refreshToken: {
+					type: String
+				}
+			}
 		}
 });
 

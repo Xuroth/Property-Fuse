@@ -10,6 +10,14 @@ function jwt() {
         path: [
 						//Public routes
 						{
+							url: '/users/auth/google',
+							methods: ['POST']
+						},
+						{
+							url: '/users/auth/facebook',
+							methods: ['POST']
+						},
+						{
 							url: '/users/authenticate',
 							methods: ['POST']
 						},

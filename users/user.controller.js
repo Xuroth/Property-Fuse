@@ -4,6 +4,8 @@ const userService   = require('./user.service');
 
 //User Routes
 router.post('/authenticate', authenticate);
+router.post('/auth/google', authGoogle);
+router.post('/auth/facebook', authFacebook);
 router.post('/register', register);
 router.get('/', getAll);
 router.get('/current', getCurrent);
@@ -60,4 +62,16 @@ function _delete(req, res, next) {
     userService.delete(req.params.id)
         .then(() => res.json({}))
         .catch(err => next(err));
+}
+
+function authGoogle(req, res, next) {
+	userService.authGoogle(req.body.code)
+		.then( user => user ? res.json(user) : res.status(400).json({message: 'Error occured during authorization process.'}))
+		.catch( err => next(err) );
+}
+
+function authFacebook(req, res, next) {
+	userService.authFacebook(req.body)
+		.then( user => user ? res.json(user) : res.status(400).json({message: 'Error occured during authorization process.'}))
+		.catch( err => next(err) );
 }

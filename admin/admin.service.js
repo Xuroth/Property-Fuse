@@ -2,6 +2,7 @@ const db					= require('_helpers/db');
 const User				= db.User;
 const Testimonial = db.Testimonial;
 const Listing			= db.Listing;
+const Inquiry			= db.Inquiry;
 
 module.exports = {
 	getDashboardData,
@@ -20,7 +21,9 @@ async function getDashboardData() {
 		usersCount: await User.countDocuments(),
 		listingsCount: await Listing.countDocuments(),
 		testimonialsCount: await Testimonial.countDocuments(),
-		inquiriesCount: 2
+		inquiriesCount: await Inquiry.countDocuments(),
+		mostRecentListing: await Listing.findOne({status: 'published'}).sort({createdAt: -1}).populate('createdBy', 'firstName lastName email accountType companyName avatar id'),
+		mostRecentSoldListing: await Listing.findOne({status: 'sold'}).sort({updatedAt: -1}).populate('createdBy', 'firstName lastName email accountType companyName avatar id')
 	}
 }
 
