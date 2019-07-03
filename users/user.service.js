@@ -114,7 +114,9 @@ async function _delete(id) {
 }
 
 async function authGoogle(googleResponse){
-
+	if(!googleResponse.code) {
+		throw 'Invalid authenticator for Google Authentication.';
+	}
 	const google = {
 		accessToken: '',
 		refreshToken: '',

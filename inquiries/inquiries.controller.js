@@ -39,8 +39,7 @@ function getInquiryById(req, res, next) {
 }
 
 function createNewInquiry(req, res, next) {
-	console.log(req.body)
-	inquiryService.newInquiry(req.body.inquiry, req.user.sub, req.body.listing)
+	inquiryService.newInquiry(req.body, req.user.sub, req.body.listing)
 		.then( inquiry => inquiry ? res.json(inquiry) : res.status(500).json({message: 'Error posting inquiry. Please try again.'}) )
 		.catch( err => next(err) );
 }
