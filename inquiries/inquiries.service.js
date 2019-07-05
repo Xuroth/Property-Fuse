@@ -55,12 +55,11 @@ async function getById(inquiryID) {
 	if(!inquiry){
 		throw 'Invalid Request';
 	} else {
-		return inquiry
+		return [inquiry]
 	}
 }
 
 async function newInquiry(inquiryData, userID, listingID) {
-	console.log(inquiryData)
 	const listing = await Listings.findById(listingID);
 	if(!listing){
 		throw 'Invalid Request';
@@ -69,7 +68,7 @@ async function newInquiry(inquiryData, userID, listingID) {
 	newInquiry.inquirer = userID;
 	newInquiry.listing = listingID;
 	await newInquiry.save();
-	return newInquiry;
+	return [newInquiry];
 }
 
 async function markReadInquiry(inquiryID) {

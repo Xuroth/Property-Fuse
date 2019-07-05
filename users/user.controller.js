@@ -65,7 +65,7 @@ function _delete(req, res, next) {
 }
 
 function authGoogle(req, res, next) {
-	userService.authGoogle(req.body.code)
+	userService.authGoogle(req.body)
 		.then( user => user ? res.json(user) : res.status(400).json({message: 'Error occured during authorization process.'}))
 		.catch( err => next(err) );
 }

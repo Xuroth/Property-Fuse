@@ -177,8 +177,29 @@ const schema = new Schema({
 			get: getPrice,
 			set: setPrice,
 			default: 000
+		},
+		distance: {
+			type: Number,
+			default: null
 		}
-});
+})
+
+schema.virtual('mainImage').get(function() {
+	if(this.images.length === 0){
+		return {
+			url: 'https://placehold.it/400&text=No%20Image'
+		}
+	}
+	let mainImage = this.images.filter( (image) => {
+		return image.main
+	})
+
+	if(mainImage.length === 0){
+		return this.images[0]
+	} else {
+		return mainImage[0];
+	}
+})
 
 
 function getPrice(num){

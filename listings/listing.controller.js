@@ -4,6 +4,7 @@ const listingService    = require('./listing.service');
 
 //Listing Routes
 router.post('/create', create);
+router.get('/search', getListingsSearch)
 router.get('/', getAll);
 router.get('/featured', getFeatured);
 router.get('/sold', getSold);
@@ -14,6 +15,7 @@ router.put('/:id', update);
 router.delete('/:id', _delete);
 router.post('/publish', publish);
 router.post('/promote/:id', promote);
+router.get('/search', getListingsSearch)
 
 module.exports = router;
 
@@ -81,4 +83,11 @@ function getRecentlySold(req, res, next) {
 	listingService.getRecentlySold()
 		.then( (listings) => res.json(listings) )
 		.catch( err => next(err) );
+}
+
+function getListingsSearch(req, res, next) {
+	listingService.getListingsSearch(req.query)
+		.then( listings => listings ? res.json(listings) : res.status(500).json({message: 'Server Error'}))
+		.catch( err => next(err));
+
 }

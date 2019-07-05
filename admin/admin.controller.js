@@ -11,6 +11,7 @@ router.put('/users/:id/unlock', unlockUser);
 router.get('/testimonials/pending', getPendingTestimonials);
 router.put('/testimonial/:id/publish', publishTestimonial);
 router.put('/testimonial/:id/reject', rejectTestimonial);
+router.get('/balance', getBalance);
 module.exports = router;
 
 function dashboard(req, res, next) {
@@ -65,5 +66,11 @@ function rejectTestimonial(req, res, next) {
 	console.log('USER', req.user)
 	adminService.rejectTestimonial(req.params.id, req.user.sub)
 		.then( testimonial => testimonial ? res.json(testimonial) : res.status(400).send({message: 'Failed to reject testimonial'}))
+		.catch( err => next(err) );
+}
+
+function getBalance(req, res, next) {
+	adminService.getBalance()
+		.then( balance => balance ? res.json(balance) : res.status(400).send({message: 'Unable to connect to Stripe'}))
 		.catch( err => next(err) );
 }
