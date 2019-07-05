@@ -2,6 +2,7 @@ const db        = require('_helpers/db');
 const Listing   = db.Listing;
 const User			= db.User;
 const stripe		= require('stripe')(process.env.STRIPE_SECRET_KEY);
+const fetch			= require('node-fetch');
 
 module.exports = {
     getAll,
@@ -14,7 +15,8 @@ module.exports = {
 		promote,
 		delete: _delete,
 		getSold,
-		getRecentlySold
+		getRecentlySold,
+		getListingsSearch
 };
 
 async function getAll() {
@@ -88,4 +90,48 @@ async function getSold() {
 
 async function getRecentlySold() {
 	return await Listing.find({status: 'sold'}).sort({'updatedAt': -1}).populate('createdBy', '-password').populate('updatedBy', '-password').populate('removedBy', '-password');
+}
+
+async function getListingsSearch(searchQuery) {
+	switch(searchQuery.type) {
+		case 'nearby': {
+			const {radius, units, origin} = searchQuery;
+			let queryResults = [
+				origin,
+			];
+			let apiData = []
+			await fetch(`https://zipcodedownload.com:5430/Radius?firstzipcode=${origin}&radiuscoverage=${radius}&format=json&key=${process.env.ZIP_API_KEY}`)
+			.then( res => {
+				if(res.status === 200) {
+					return res.json()
+				} else {
+					throw 'ERROR'
+				}
+			})
+			.then( (data) => {
+				let zips = data.map( result => result.ZipCode);
+				apiData = data;
+				queryResults = queryResults.concat(zips);
+				// console.log(queryResults)
+			})
+
+			let listingResults = await Listing.find({zipCode: {$in: queryResults}}).populate('createdBy', 'firstName lastName companyName email avatar')
+			// console.log(apiData)
+			await listingResults.forEach((listing,index) => {
+				
+				let distance = apiData.filter((apiEntry) => {
+					// console.log('APIENTRY', apiEntry)
+					return apiEntry.ZipCode === listing.zipCode;
+				});
+				if(distance.length < 1) {
+					distance = Math.random().toFixed(2)
+				} else {
+					distance = distance[0].Distance
+				}
+				listingResults[index].distance = distance
+			})
+			return listingResults;
+		}
+	}
+
 }

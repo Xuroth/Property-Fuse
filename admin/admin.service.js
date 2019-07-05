@@ -3,6 +3,7 @@ const User				= db.User;
 const Testimonial = db.Testimonial;
 const Listing			= db.Listing;
 const Inquiry			= db.Inquiry;
+const stripe			= require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 module.exports = {
 	getDashboardData,
@@ -13,7 +14,8 @@ module.exports = {
 	editUser,
 	getPendingTestimonials,
 	publishTestimonial,
-	rejectTestimonial
+	rejectTestimonial,
+	getBalance,
 }
 
 async function getDashboardData() {
@@ -23,7 +25,7 @@ async function getDashboardData() {
 		testimonialsCount: await Testimonial.countDocuments(),
 		inquiriesCount: await Inquiry.countDocuments(),
 		mostRecentListing: await Listing.findOne({status: 'published'}).sort({createdAt: -1}).populate('createdBy', 'firstName lastName email accountType companyName avatar id'),
-		mostRecentSoldListing: await Listing.findOne({status: 'sold'}).sort({updatedAt: -1}).populate('createdBy', 'firstName lastName email accountType companyName avatar id')
+		mostRecentSoldListing: await Listing.findOne({status: 'sold'}).sort({updatedAt: -1}).populate('createdBy', 'firstName lastName email accountType companyName avatar id'),
 	}
 }
 
@@ -106,4 +108,11 @@ async function rejectTestimonial(id, adminID) {
 	testimonial.removedAt = Date.now();
 	await testimonial.save()
 	return testimonial;
+}
+
+async function getBalance() {
+	return {
+		balance: await stripe.balance.retrieve(),
+		history: await stripe.balanceTransactions.list({limit: 5})
+	}
 }

@@ -41,6 +41,7 @@ function jwt() {
 							url: '/listings/recently-sold',
 							methods: ['GET']
 						},
+						
 						{
 							url: /^\/listings\/.*/,
 							methods: ['GET']
