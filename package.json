@@ -30,7 +30,7 @@
     "moment": "^2.24.0",
     "mongoose": "^5.5.5",
     "morgan": "^1.9.1",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "rootpath": "^0.1.2",
     "stripe": "^7.3.0",
     "winston": "^3.2.1"
